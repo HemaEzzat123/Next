@@ -8,13 +8,13 @@ export const metadata: Metadata = {
   title: 'Customers',
 };
 
-// ✅ النوع الصحيح للـ props في صفحات Next.js app router
-export default async function Page({
-  searchParams,
-}: {
-  searchParams?: { [key: string]: string | undefined };
-}) {
-  const query = searchParams?.query || '';
+type Props = {
+  searchParams?: Record<string, string | string[] | undefined>;
+};
+
+export default async function Page({ searchParams }: Props) {
+  const queryParam = searchParams?.query;
+  const query = Array.isArray(queryParam) ? queryParam[0] : queryParam || '';
   const customers = await fetchFilteredCustomers(query);
 
   return (
@@ -22,7 +22,6 @@ export default async function Page({
       <Suspense fallback={<div className="h-10 mb-4 bg-gray-100 rounded-md" />}>
         <Search placeholder="Search customers..." />
       </Suspense>
-
       <CustomersTable customers={customers} />
     </div>
   );
