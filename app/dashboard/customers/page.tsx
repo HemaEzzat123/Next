@@ -8,11 +8,11 @@ export const metadata: Metadata = {
   title: 'Customers',
 };
 
-type Props = {
-  searchParams?: Record<string, string | string[] | undefined>;
-};
+interface SearchParamsProps {
+  searchParams?: { [key: string]: string | string[] | undefined };
+}
 
-export default async function Page({ searchParams }: Props) {
+export default async function Page({ searchParams }: SearchParamsProps) {
   const queryParam = searchParams?.query;
   const query = Array.isArray(queryParam) ? queryParam[0] : queryParam || '';
   const customers = await fetchFilteredCustomers(query);
