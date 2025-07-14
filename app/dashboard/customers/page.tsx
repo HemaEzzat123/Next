@@ -8,18 +8,21 @@ export const metadata: Metadata = {
   title: 'Customers',
 };
 
-export default async function Page({ searchParams }: { searchParams?: { query?: string } }) {
+// ✅ النوع الصحيح للـ props في صفحات Next.js app router
+export default async function Page({
+  searchParams,
+}: {
+  searchParams?: { [key: string]: string | undefined };
+}) {
   const query = searchParams?.query || '';
   const customers = await fetchFilteredCustomers(query);
 
   return (
     <div className="w-full">
-      {/* Search needs Suspense because it uses `useSearchParams` */}
       <Suspense fallback={<div className="h-10 mb-4 bg-gray-100 rounded-md" />}>
         <Search placeholder="Search customers..." />
       </Suspense>
 
-      {/* Table is server-rendered */}
       <CustomersTable customers={customers} />
     </div>
   );
